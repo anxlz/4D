@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's For Dinner</title>
+
+    <!-- Icon -->
+    <link rel="icon" href="./images/favicon.png">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 50%, #fef9c3 100%);
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #fed7aa;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn {
+            color: #6b7280;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+        }
+
+        .nav-btn:hover {
+            color: #ea580c;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #fdba74;
+            cursor: pointer;
+        }
+
+        /* Recipe Card */
+        .recipe-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid #fed7aa;
+        }
+
+        .recipe-image-container {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .rating-badge {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            background: white;
+            border-radius: 50px;
+            padding: 8px 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .info-overlay {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            right: 24px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        /* Content Area */
+        .recipe-content {
+            padding: 40px;
+            max-height: 750px;
+            overflow-y: auto;
+        }
+
+        .badge-custom {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-easy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-category {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .action-btn {
+            width: 48px;
+            height: 48px;
+            background: #fed7aa;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .action-btn:hover {
+            background: #fdba74;
+        }
+
+        .warning-alert {
+            background: #fef2f2;
+            border-left: 4px solid #dc2626;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        /* Tabs */
+        .nav-tabs {
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #6b7280;
+            font-weight: 600;
+            padding: 12px 8px;
+            margin: 0;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #ea580c;
+            border-bottom-color: #ea580c;
+            background: transparent;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #4b5563;
+            border-color: transparent;
+        }
+
+        /* Tab Content */
+        .tab-content-area {
+            max-height: 350px;
+            overflow-y: auto;
+            padding: 16px 0;
+        }
+
+        .ingredients-box {
+            background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .ingredient-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .ingredient-number {
+            width: 24px;
+            height: 24px;
+            background: #f97316;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .instruction-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .instruction-number {
+            width: 48px;
+            height: 48px;
+            background: #f97316;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .nutrition-card {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nutrition-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .tip-item {
+            background: #fffbeb;
+            border-left: 4px solid #fbbf24;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        @media (min-width: 992px) {
+            .recipe-image-container {
+                height: 750px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .recipe-content {
+                padding: 20px;
+            }
+
+            .nav-tabs .nav-link {
+                font-size: 0.75rem;
+                padding: 8px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container-fluid">
+            <div class="row align-items-center py-3">
+                <div class="col">
+                    <div class="d-flex align-items-center">
+                        <div class="brand-icon">
+                            <i class="fas fa-utensils text-white fs-4"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h1 class="h5 h2-md mb-0 fw-bold">What's For Dinner</h1>
+                            <p class="small text-muted mb-0">Your daily meal inspiration</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="col-auto d-none d-md-flex align-items-center gap-3">
+                    <button class="nav-btn">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                    <button class="nav-btn">
+                        <i class="fas fa-clock-rotate-left"></i>
+                    </button>
+                    <button class="nav-btn">
+                        <i class="fas fa-gear"></i>
+                    </button>
+                    <img src="Images/avatar-4.jpeg" alt="Profile" class="profile-img">
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="col-auto d-md-none">
+                    <button class="nav-btn" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation Menu -->
+            <div class="collapse d-md-none border-top pt-3" id="mobileMenu">
+                <div class="d-flex flex-column gap-3 pb-3">
+                    <button class="nav-btn text-start">
+                        <i class="fas fa-bookmark me-2"></i>
+                        <span>Saved Recipes</span>
+                    </button>
+                    <button class="nav-btn text-start">
+                        <i class="fas fa-clock-rotate-left me-2"></i>
+                        <span>Recent</span>
+                    </button>
+                    <button class="nav-btn text-start">
+                        <i class="fas fa-gear me-2"></i>
+                        <span>Settings</span>
+                    </button>
+                    <button class="nav-btn text-start">
+                        <img src="Images/avatar-4.jpeg" alt="Profile" class="profile-img me-2" style="width: 32px; height: 32px;">
+                        <span>Profile</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container my-4">
+        <section class="recipe-card">
+            <div class="row g-0">
+                <!-- Recipe Image Column -->
+                <div class="col-lg-5">
+                    <div class="recipe-image-container">
+                        <img id="recipe-image" src="Images/shrimp-scampi.jpeg" alt="Shrimp Scampi" class="recipe-image">
+                        
+                        <!-- Rating Badge -->
+                        <div class="rating-badge">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-star text-warning"></i>
+                                <span class="fw-semibold" id="rating-average">4.8</span>
+                                <span class="text-muted small" id="rating-quantity">(356 reviews)</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Info Overlay -->
+                        <div class="info-overlay">
+                            <div class="row g-3">
+                                <div class="col-4">
+                                    <div class="info-item">
+                                        <i class="fas fa-clock info-icon text-warning"></i>
+                                        <p class="small text-muted mb-0">Prep Time</p>
+                                        <p class="fw-bold mb-0" id="prep-time-display">10 min</p>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="info-item">
+                                        <i class="fas fa-fire-burner info-icon text-danger"></i>
+                                        <p class="small text-muted mb-0">Cook Time</p>
+                                        <p class="fw-bold mb-0" id="cook-time-display">15 min</p>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="info-item">
+                                        <i class="fas fa-users info-icon text-primary"></i>
+                                        <p class="small text-muted mb-0">Servings</p>
+                                        <p class="fw-bold mb-0" id="servings-display">2 people</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recipe Content Column -->
+                <div class="col-lg-7">
+                    <div class="recipe-content">
+                        <!-- Recipe Header -->
+                        <div class="d-flex flex-column flex-md-row gap-3 justify-content-between mb-4">
+                            <div>
+                                <div class="d-flex gap-2 mb-3">
+                                    <span class="badge-custom badge-easy" id="difficulty-badge">Easy</span>
+                                    <span class="badge-custom badge-category" id="category-badge">Seafood</span>
+                                </div>
+                                <h3 class="h2 fw-bold mb-2" id="recipe-name">Shrimp Scampi</h3>
+                                <p class="text-muted" id="recipe-description">Garlicky shrimp in white wine butter sauce</p>
+                            </div>
+                            <div class="d-flex gap-2 align-self-end align-self-md-center">
+                                <button class="action-btn">
+                                    <i class="fas fa-bookmark text-warning"></i>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share-nodes text-warning"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Time Warning -->
+                        <div id="time-warning" class="warning-alert mb-4 d-none">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-triangle-exclamation text-danger fs-4 me-3"></i>
+                                <div>
+                                    <p class="fw-semibold text-danger mb-1">Extended Preparation Time</p>
+                                    <p class="small text-danger mb-0">This recipe requires more than 45 minutes to prepare. Plan accordingly!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs mb-3" role="tablist">
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link active w-100" data-bs-toggle="tab" data-bs-target="#ingredients" type="button">
+                                    <i class="fas fa-list-check me-1"></i>
+                                    <span class="d-none d-sm-inline">Ingredients</span>
+                                </button>
+                            </li>
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#instructions" type="button">
+                                    <i class="fas fa-book-open me-1"></i>
+                                    <span class="d-none d-sm-inline">Instructions</span>
+                                </button>
+                            </li>
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#nutrition" type="button">
+                                    <i class="fas fa-chart-pie me-1"></i>
+                                    <span class="d-none d-sm-inline">Nutrition</span>
+                                </button>
+                            </li>
+                            <li class="nav-item flex-fill" role="presentation">
+                                <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#tips" type="button">
+                                    <i class="fas fa-lightbulb me-1"></i>
+                                    <span class="d-none d-sm-inline">Tips</span>
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content">
+                            <!-- Ingredients Tab -->
+                            <div class="tab-pane fade show active tab-content-area" id="ingredients">
+                                <div class="ingredients-box">
+                                    <ul class="list-unstyled mb-0" id="ingredients-list">
+                                        <li class="ingredient-item">
+                                            <div class="ingredient-number">1</div>
+                                            <span class="text-secondary">400g large shrimp, peeled</span>
+                                        </li>
+                                        <li class="ingredient-item">
+                                            <div class="ingredient-number">2</div>
+                                            <span class="text-secondary">300g linguine pasta</span>
+                                        </li>
+                                        <li class="ingredient-item">
+                                            <div class="ingredient-number">3</div>
+                                            <span class="text-secondary">6 cloves garlic, minced</span>
+                                        </li>
+                                        <li class="ingredient-item">
+                                            <div class="ingredient-number">4</div>
+                                            <span class="text-secondary">1/2 cup white wine</span>
+                                        </li>
+                                        <li class="ingredient-item">
+                                            <div class="ingredient-number">5</div>
+                                            <span class="text-secondary">4 tablespoons butter</span>
+                                        </li>
+                                        <li class="ingredient-item">
+                                            <div class="ingredient-number">6</div>
+                                            <span class="text-secondary">2 tablespoons olive oil</span>
+                                        </li>
+                                        <li class="ingredient-item">
+                                            <div class="ingredient-number">7</div>
+                                            <span class="text-secondary">Fresh parsley, chopped</span>
+                                        </li>
+                                        <li class="ingredient-item">
+                                            <div class="ingredient-number">8</div>
+                                            <span class="text-secondary">Lemon juice and zest</span>
+                                        </li>
+                                        <li class="ingredient-item">
+                                            <div class="ingredient-number">9</div>
+                                            <span class="text-secondary">Red pepper flakes</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Instructions Tab -->
+                            <div class="tab-pane fade tab-content-area" id="instructions">
+                                <div id="instructions-list">
+                                    <div class="instruction-item">
+                                        <div class="instruction-number">1</div>
+                                        <div class="pt-2">
+                                            <p class="text-secondary mb-0">Cook linguine according to package directions. Reserve 1 cup pasta water.</p>
+                                        </div>
+                                    </div>
+                                    <div class="instruction-item">
+                                        <div class="instruction-number">2</div>
+                                        <div class="pt-2">
+                                            <p class="text-secondary mb-0">Heat olive oil and 2 tablespoons butter in a large pan. Add garlic and red pepper flakes, cook for 1 minute.</p>
+                                        </div>
+                                    </div>
+                                    <div class="instruction-item">
+                                        <div class="instruction-number">3</div>
+                                        <div class="pt-2">
+                                            <p class="text-secondary mb-0">Add shrimp, cook until pink on both sides, about 3-4 minutes. Remove and set aside.</p>
+                                        </div>
+                                    </div>
+                                    <div class="instruction-item">
+                                        <div class="instruction-number">4</div>
+                                        <div class="pt-2">
+                                            <p class="text-secondary mb-0">Add white wine to pan, simmer for 2 minutes. Add remaining butter and lemon juice.</p>
+                                        </div>
+                                    </div>
+                                    <div class="instruction-item">
+                                        <div class="instruction-number">5</div>
+                                        <div class="pt-2">
+                                            <p class="text-secondary mb-0">Return shrimp to pan, add cooked pasta and toss. Add pasta water if needed.</p>
+                                        </div>
+                                    </div>
+                                    <div class="instruction-item">
+                                        <div class="instruction-number">6</div>
+                                        <div class="pt-2">
+                                            <p class="text-secondary mb-0">Garnish with parsley, lemon zest, and serve immediately.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nutrition Tab -->
+                            <div class="tab-pane fade tab-content-area" id="nutrition">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="nutrition-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="nutrition-icon bg-warning bg-opacity-25">
+                                                    <i class="fas fa-fire text-warning"></i>
+                                                </div>
+                                                <span class="text-secondary fw-medium">Calories</span>
+                                            </div>
+                                            <span class="fs-5 fw-bold" id="calories-value">520 kcal</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="nutrition-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="nutrition-icon bg-primary bg-opacity-25">
+                                                    <i class="fas fa-dumbbell text-primary"></i>
+                                                </div>
+                                                <span class="text-secondary fw-medium">Protein</span>
+                                            </div>
+                                            <span class="fs-5 fw-bold" id="protein-value">36g</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="nutrition-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="nutrition-icon bg-warning bg-opacity-25">
+                                                    <i class="fas fa-wheat-awn text-warning"></i>
+                                                </div>
+                                                <span class="text-secondary fw-medium">Carbs</span>
+                                            </div>
+                                            <span class="fs-5 fw-bold" id="carbs-value">54g</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="nutrition-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="nutrition-icon bg-danger bg-opacity-25">
+                                                    <i class="fas fa-droplet text-danger"></i>
+                                                </div>
+                                                <span class="text-secondary fw-medium">Fat</span>
+                                            </div>
+                                            <span class="fs-5 fw-bold" id="fat-value">18g</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="nutrition-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="nutrition-icon bg-success bg-opacity-25">
+                                                    <i class="fas fa-seedling text-success"></i>
+                                                </div>
+                                                <span class="text-secondary fw-medium">Fiber</span>
+                                            </div>
+                                            <span class="fs-5 fw-bold" id="fiber-value">3g</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="nutrition-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="nutrition-icon bg-info bg-opacity-25">
+                                                    <i class="fas fa-cube text-info"></i>
+                                                </div>
+                                                <span class="text-secondary fw-medium">Sodium</span>
+                                            </div>
+                                            <span class="fs-5 fw-bold" id="sodium-value">620mg</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tips Tab -->
+                            <div class="tab-pane fade tab-content-area" id="tips">
+                                <div id="tips-list">
+                                    <div class="tip-item">
+                                        <i class="fas fa-circle-check text-warning fs-5 me-3 mt-1"></i>
+                                        <p class="text-secondary mb-0">Don't overcook shrimp - they cook very quickly</p>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-circle-check text-warning fs-5 me-3 mt-1"></i>
+                                        <p class="text-secondary mb-0">Use good quality white wine for best flavor</p>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-circle-check text-warning fs-5 me-3 mt-1"></i>
+                                        <p class="text-secondary mb-0">Toss pasta in sauce for maximum flavor absorption</p>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-circle-check text-warning fs-5 me-3 mt-1"></i>
+                                        <p class="text-secondary mb-0">Add extra lemon for bright, fresh taste</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="border-top pt-4 mt-4">
+                            <button id="try-another-btn" class="btn btn-primary-custom">
+                                <i class="fas fa-rotate me-2"></i>
+                                Try Another Recipe
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Recipe Database
+        const recipes = [
+            {
+                name: "Shrimp Scampi",
+                description: "Garlicky shrimp in white wine butter sauce",
+                image: "images/shrimp-scampi.jpg",
+                difficulty: "Easy",
+                category: "Seafood",
+                prepTime: "10 min",
+                cookTime: "15 min",
+                servings: "2 people",
+                rating: 4.8,
+                reviews: 356,
+                ingredients: [
+                    "400g large shrimp, peeled",
+                    "300g linguine pasta",
+                    "6 cloves garlic, minced",
+                    "1/2 cup white wine",
+                    "4 tablespoons butter",
+                    "2 tablespoons olive oil",
+                    "Fresh parsley, chopped",
+                    "Lemon juice and zest",
+                    "Red pepper flakes"
+                ],
+                instructions: [
+                    "Cook linguine according to package directions. Reserve 1 cup pasta water.",
+                    "Heat olive oil and 2 tablespoons butter in a large pan. Add garlic and red pepper flakes, cook for 1 minute.",
+                    "Add shrimp, cook until pink on both sides, about 3-4 minutes. Remove and set aside.",
+                    "Add white wine to pan, simmer for 2 minutes. Add remaining butter and lemon juice.",
+                    "Return shrimp to pan, add cooked pasta and toss. Add pasta water if needed.",
+                    "Garnish with parsley, lemon zest, and serve immediately."
+                ],
+                nutrition: {
+                    calories: "520 kcal",
+                    protein: "36g",
+                    carbs: "54g",
+                    fat: "18g",
+                    fiber: "3g",
+                    sodium: "620mg"
+                },
+                tips: [
+                    "Don't overcook shrimp - they cook very quickly",
+                    "Use good quality white wine for best flavor",
+                    "Toss pasta in sauce for maximum flavor absorption",
+                    "Add extra lemon for bright, fresh taste"
+                ]
+            },
+            {
+                name: "Chicken Tikka Masala",
+                description: "Creamy tomato curry with tender chicken",
+                image: "images/chicken-tikka.jpg",
+                difficulty: "Medium",
+                category: "Indian",
+                prepTime: "20 min",
+                cookTime: "30 min",
+                servings: "4 people",
+                rating: 4.9,
+                reviews: 523,
+                ingredients: [
+                    "500g chicken breast, cubed",
+                    "1 cup plain yogurt",
+                    "2 tablespoons tikka masala paste",
+                    "1 large onion, diced",
+                    "4 cloves garlic, minced",
+                    "1 inch ginger, grated",
+                    "400g tomato sauce",
+                    "1 cup heavy cream",
+                    "Fresh cilantro",
+                    "Basmati rice for serving"
+                ],
+                instructions: [
+                    "Marinate chicken in yogurt and half the tikka paste for 30 minutes.",
+                    "Heat oil in a large pan, add chicken and cook until golden. Remove and set aside.",
+                    "In the same pan, sauté onions until soft. Add garlic and ginger, cook for 2 minutes.",
+                    "Add remaining tikka paste and tomato sauce. Simmer for 10 minutes.",
+                    "Stir in cream and return chicken to the pan. Simmer for 5-7 minutes.",
+                    "Garnish with cilantro and serve with basmati rice."
+                ],
+                nutrition: {
+                    calories: "650 kcal",
+                    protein: "42g",
+                    carbs: "38g",
+                    fat: "35g",
+                    fiber: "4g",
+                    sodium: "890mg"
+                },
+                tips: [
+                    "Marinate chicken longer for deeper flavor",
+                    "Use full-fat yogurt for best results",
+                    "Adjust spice level to your preference",
+                    "Perfect with naan bread"
+                ]
+            },
+            {
+                name: "Beef Tacos",
+                description: "Spicy ground beef in crispy taco shells",
+                image: "images/beef-tacos.jpg",
+                difficulty: "Easy",
+                category: "Mexican",
+                prepTime: "15 min",
+                cookTime: "20 min",
+                servings: "3 people",
+                rating: 4.7,
+                reviews: 412,
+                ingredients: [
+                    "500g ground beef",
+                    "1 packet taco seasoning",
+                    "12 taco shells",
+                    "2 cups lettuce, shredded",
+                    "2 tomatoes, diced",
+                    "1 cup cheddar cheese, shredded",
+                    "1 cup sour cream",
+                    "Salsa for serving",
+                    "Jalapeños (optional)"
+                ],
+                instructions: [
+                    "Brown ground beef in a large skillet over medium-high heat.",
+                    "Add taco seasoning and water according to package directions. Simmer for 5 minutes.",
+                    "Warm taco shells in the oven according to package instructions.",
+                    "Fill each shell with seasoned beef.",
+                    "Top with lettuce, tomatoes, cheese, and sour cream.",
+                    "Serve with salsa and jalapeños if desired."
+                ],
+                nutrition: {
+                    calories: "580 kcal",
+                    protein: "32g",
+                    carbs: "45g",
+                    fat: "28g",
+                    fiber: "5g",
+                    sodium: "740mg"
+                },
+                tips: [
+                    "Make your own taco seasoning for fresher taste",
+                    "Don't overfill shells to prevent breaking",
+                    "Try soft tortillas as an alternative",
+                    "Add guacamole for extra creaminess"
+                ]
+            },
+            {
+                name: "Margherita Pizza",
+                description: "Classic Italian pizza with fresh mozzarella",
+                image: "images/margherita-pizza.jpg",
+                difficulty: "Medium",
+                category: "Italian",
+                prepTime: "90 min",
+                cookTime: "12 min",
+                servings: "2 people",
+                rating: 4.9,
+                reviews: 687,
+                ingredients: [
+                    "Pizza dough (homemade or store-bought)",
+                    "200g tomato sauce",
+                    "250g fresh mozzarella",
+                    "Fresh basil leaves",
+                    "2 tablespoons olive oil",
+                    "2 cloves garlic, minced",
+                    "Salt and pepper to taste",
+                    "Parmesan cheese (optional)"
+                ],
+                instructions: [
+                    "Preheat oven to 250°C (480°F). If using a pizza stone, heat it in the oven.",
+                    "Roll out pizza dough to desired thickness on a floured surface.",
+                    "Spread tomato sauce evenly over the dough, leaving a border for the crust.",
+                    "Tear mozzarella into pieces and distribute over the sauce.",
+                    "Drizzle with olive oil and season with salt and pepper.",
+                    "Bake for 10-12 minutes until crust is golden and cheese is bubbly.",
+                    "Top with fresh basil leaves and serve immediately."
+                ],
+                nutrition: {
+                    calories: "720 kcal",
+                    protein: "28g",
+                    carbs: "82g",
+                    fat: "30g",
+                    fiber: "4g",
+                    sodium: "980mg"
+                },
+                tips: [
+                    "Use a pizza stone for crispier crust",
+                    "Don't overload with toppings",
+                    "Let dough come to room temperature before rolling",
+                    "Fresh mozzarella makes all the difference"
+                ]
+            },
+            {
+                name: "Pad Thai",
+                description: "Sweet and tangy Thai rice noodles",
+                image: "images/pad-thai.jpg",
+                difficulty: "Medium",
+                category: "Asian",
+                prepTime: "25 min",
+                cookTime: "15 min",
+                servings: "3 people",
+                rating: 4.8,
+                reviews: 445,
+                ingredients: [
+                    "250g rice noodles",
+                    "200g shrimp or chicken",
+                    "3 eggs",
+                    "3 tablespoons tamarind paste",
+                    "2 tablespoons fish sauce",
+                    "2 tablespoons sugar",
+                    "Bean sprouts",
+                    "Crushed peanuts",
+                    "Lime wedges",
+                    "Green onions, chopped"
+                ],
+                instructions: [
+                    "Soak rice noodles in warm water for 30 minutes. Drain and set aside.",
+                    "Mix tamarind paste, fish sauce, and sugar to make the sauce.",
+                    "Heat oil in a wok, scramble eggs and set aside.",
+                    "Stir-fry protein until cooked, add noodles and sauce.",
+                    "Toss everything together, cooking for 3-4 minutes.",
+                    "Add bean sprouts, eggs, and half the peanuts.",
+                    "Serve with lime wedges, remaining peanuts, and green onions."
+                ],
+                nutrition: {
+                    calories: "590 kcal",
+                    protein: "34g",
+                    carbs: "68g",
+                    fat: "20g",
+                    fiber: "3g",
+                    sodium: "1120mg"
+                },
+                tips: [
+                    "Don't oversoak the noodles",
+                    "Have all ingredients ready before cooking",
+                    "Cook on high heat for best results",
+                    "Adjust sweetness and tanginess to taste"
+                ]
+            }
+        ];
+
+        // Current recipe index
+        let currentRecipeIndex = 0;
+
+        // Function to display recipe by index
+        function displayRecipe(index) {
+            const recipe = recipes[index];
+            
+            // Update basic info
+            document.getElementById('recipe-name').textContent = recipe.name;
+            document.getElementById('recipe-description').textContent = recipe.description;
+            document.getElementById('difficulty-badge').textContent = recipe.difficulty;
+            document.getElementById('category-badge').textContent = recipe.category;
+            document.getElementById('prep-time-display').textContent = recipe.prepTime;
+            document.getElementById('cook-time-display').textContent = recipe.cookTime;
+            document.getElementById('servings-display').textContent = recipe.servings;
+            document.getElementById('rating-average').textContent = recipe.rating;
+            document.getElementById('rating-quantity').textContent = `(${recipe.reviews} reviews)`;
+            
+            // Check if total time > 45 minutes
+            const prepMinutes = parseInt(recipe.prepTime);
+            const cookMinutes = parseInt(recipe.cookTime);
+            const totalTime = prepMinutes + cookMinutes;
+            
+            if (totalTime > 45) {
+                document.getElementById('time-warning').classList.remove('d-none');
+            } else {
+                document.getElementById('time-warning').classList.add('d-none');
+            }
+            
+            // Update ingredients
+            const ingredientsList = document.getElementById('ingredients-list');
+            ingredientsList.innerHTML = recipe.ingredients.map((ingredient, index) => `
+                <li class="ingredient-item">
+                    <div class="ingredient-number">${index + 1}</div>
+                    <span class="text-secondary">${ingredient}</span>
+                </li>
+            `).join('');
+            
+            // Update instructions
+            const instructionsList = document.getElementById('instructions-list');
+            instructionsList.innerHTML = recipe.instructions.map((instruction, index) => `
+                <div class="instruction-item">
+                    <div class="instruction-number">${index + 1}</div>
+                    <div class="pt-2">
+                        <p class="text-secondary mb-0">${instruction}</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Update nutrition
+            document.getElementById('calories-value').textContent = recipe.nutrition.calories;
+            document.getElementById('protein-value').textContent = recipe.nutrition.protein;
+            document.getElementById('carbs-value').textContent = recipe.nutrition.carbs;
+            document.getElementById('fat-value').textContent = recipe.nutrition.fat;
+            document.getElementById('fiber-value').textContent = recipe.nutrition.fiber;
+            document.getElementById('sodium-value').textContent = recipe.nutrition.sodium;
+            
+            // Update tips
+            const tipsList = document.getElementById('tips-list');
+            tipsList.innerHTML = recipe.tips.map(tip => `
+                <div class="tip-item">
+                    <i class="fas fa-circle-check text-warning fs-5 me-3 mt-1"></i>
+                    <p class="text-secondary mb-0">${tip}</p>
+                </div>
+            `).join('');
+        }
+        
+        // Function to display random recipe
+        function displayRandomRecipe() {
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * recipes.length);
+            } while (randomIndex === currentRecipeIndex && recipes.length > 1);
+            
+            currentRecipeIndex = randomIndex;
+            displayRecipe(currentRecipeIndex);
+        }
+        
+        // Initialize - Don't call displayRandomRecipe on load, let the HTML show first recipe
+        // The HTML already shows Shrimp Scampi which is recipes[0]
+        
+        // Try Another Recipe button
+        document.getElementById('try-another-btn').addEventListener('click', displayRandomRecipe);
+    </script>
+</body>
+</html>
